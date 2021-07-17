@@ -63,13 +63,13 @@ class Trainer(object):
         r2 = r2_score(actual, pred)
         return acc_score, recal_sc, r2
     
-    def train(self, C, l1_ratio):
-        with mlflow.start_run(source_name=self.current_file) as run:
+    def train(self, C, l1_ratio, max_iter):
+        with mlflow.start_run() as run:
             run_id = run.info.run_uuid
             print("run_id:",run_id)
             experiment_id = run.info.experiment_id
             print("  experiment_id:",experiment_id)
-            clf = LogisticRegression(C=C, l1_ratio=l1_ratio, random_state=42)
+            clf = LogisticRegression(C=C, l1_ratio=l1_ratio, max_iter=max_iter, random_state=42)
             clf.fit(self.train_x, self.train_y)
     
             predicted_qualities = clf.predict(self.test_x)
@@ -79,17 +79,21 @@ class Trainer(object):
             print("  Parameters:")
             print("    C:",C)
             print("    l1_ratio:",l1_ratio)
+            print("    max_iter:",max_iter)
+
             print("  Metrics:")
-            print("    RMSE:",acc_score)
-            print("    MAE:",recal_sc)
+            print("    Accuracy_Score:",acc_score)
+            print("    Recall_Score:",recal_sc)
             print("    R2:",r2)
     
             mlflow.log_param("C", C)
             mlflow.log_param("l1_ratio", l1_ratio)
+            mlflow.log_param("max_iter", max_iter)
+
     
-            mlflow.log_metric("rmse", acc_score)
+            mlflow.log_metric("accuracy_score", acc_score)
             mlflow.log_metric("r2", r2)
-            mlflow.log_metric("mae", recal_sc)
+            mlflow.log_metric("recall_score", recal_sc)
             
             mlflow.set_tag("data_path", self.data_path)
             mlflow.set_tag("exp_id", experiment_id)
@@ -100,9 +104,14 @@ class Trainer(object):
             mlflow.sklearn.log_model(clf, "model")
     
             eps = 5e-3  # the smaller it is the longer is the path
-            alphas_enet, coefs_enet, _ = enet_path(self.X, self.y, eps=eps, l1_ratio=l1_ratio, fit_intercept=False)
+            alphas_enet, coefs_enet, _ = enet_path(self.X, self.y, eps=eps, l1_ratio=l1_ratio, max_iter=max_iter, fit_intercept=False)
             plot_file = "LogisticRegression-paths.png"
             plot_utils.plot_enet_descent_path(self.X, self.y, l1_ratio, alphas_enet, coefs_enet, plot_file)
             mlflow.log_artifact(plot_file)
     
         return (experiment_id,run_id)
+
+if __name__ == "__main__":
+    train = Trainer(experiment_name='loan-predictor', data_path='data/data.csv', run_origin='Local Run')
+
+    train.train(C=0.5, l1_ratio=0.8, max_iter=300)
