@@ -25,7 +25,7 @@ version = 'v1'
 data_url = d.api.get_url(
     path=path,
     repo=repo,
-    rev=version
+    # rev=version
 )
 
 
