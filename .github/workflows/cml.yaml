@@ -1,0 +1,39 @@
+name: model-training
+on: [push]
+jobs:
+  run:
+    runs-on: [ubuntu-latest]
+    container: docker://ghcr.io/iterative/cml:0-dvc2-base1
+    steps:
+      - uses: actions/checkout@v2
+      - name: Train model
+        env:
+          REPO_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          GDRIVE_CREDENTIALS_DATA: ${{ secrets.GDRIVE_CREDENTIALS_DATA }}
+        run: |
+          # Install requirements
+          pip install -r requirements.txt
+
+          # Pull dataset with DVC
+          dvc pull
+
+          # run the train script
+          python train.py
+
+          # Pull data and reproduce pipeline
+          # dvc pull --run-cache
+          dvc repro
+
+          # Report metrics
+          echo "## Metrics" >> report.md
+
+          # Use DVC metrics diff to compare metrics to master
+          git fetch --prune --unshallow
+
+          dvc metrics diff --show-md master >> report.md
+
+          # Add figure to report
+          echo "## Data Visualization" >> report.md
+          cml-publish images/featureImportance.png --md >> report.md
+
+          cml-send-comment report.md 
