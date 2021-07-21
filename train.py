@@ -11,15 +11,27 @@ from sklearn.linear_model import LogisticRegression, enet_path
 
 import mlflow
 import mlflow.sklearn
-import plot_utils
+from scripts import plot_utils
+
+import dvc
 
 print("MLflow Version:", mlflow.version.VERSION)
 print("MLflow Tracking URI:", mlflow.get_tracking_uri())
 
+path = 'data/loan_data.csv'
+repo = '/home/Abuton/Desktop/ML_PATH/week0/Loan-Predictor-with-MLflow-DVC'
+version = 'v1'
+
+data_url = dvc.api.get_url(
+    path=path,
+    repo=repo,
+    rev=version
+)
+
+
 class Trainer(object):
-    def __init__(self, experiment_name, data_path, run_origin="none"):
+    def __init__(self, experiment_name, run_origin="none"):
         self.experiment_name = experiment_name
-        self.data_path = data_path
         self.run_origin = run_origin
         np.random.seed(2021)
 
@@ -27,8 +39,8 @@ class Trainer(object):
         print("run_origin:",run_origin)
 
         # Read the wine-quality csv file 
-        print("data_path:",data_path)
-        data = pd.read_csv(data_path)
+        print("data_path:",data_url)
+        data = pd.read_csv(data_url)
 
     
         data['Gender']= data['Gender'].map({'Male':0, 'Female':1})
@@ -95,7 +107,7 @@ class Trainer(object):
             mlflow.log_metric("r2", r2)
             mlflow.log_metric("recall_score", recal_sc)
             
-            mlflow.set_tag("data_path", self.data_path)
+            mlflow.set_tag("data_path", self.data_url)
             mlflow.set_tag("exp_id", experiment_id)
             mlflow.set_tag("exp_name", self.experiment_name)
             mlflow.set_tag("run_origin", self.run_origin)
@@ -112,6 +124,6 @@ class Trainer(object):
         return (experiment_id,run_id)
 
 if __name__ == "__main__":
-    train = Trainer(experiment_name='loan-predictor', data_path='data/data.csv', run_origin='Local Run')
+    train = Trainer(experiment_name='loan-predictor', run_origin='Local Run')
 
     train.train(C=0.5, l1_ratio=0.8, max_iter=300)
