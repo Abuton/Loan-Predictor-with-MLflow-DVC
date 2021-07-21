@@ -13,16 +13,16 @@ import mlflow
 import mlflow.sklearn
 from scripts import plot_utils
 
-import dvc
+import dvc as d
 
 print("MLflow Version:", mlflow.version.VERSION)
 print("MLflow Tracking URI:", mlflow.get_tracking_uri())
 
 path = 'data/loan_data.csv'
-repo = '/home/Abuton/Desktop/ML_PATH/week0/Loan-Predictor-with-MLflow-DVC'
+repo = 'https://github.com/Abuton/Loan-Predictor-with-MLflow-DVC'
 version = 'v1'
 
-data_url = dvc.api.get_url(
+data_url = d.api.get_url(
     path=path,
     repo=repo,
     rev=version
