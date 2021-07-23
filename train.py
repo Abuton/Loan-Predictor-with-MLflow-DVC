@@ -22,11 +22,13 @@ path = 'data/loan_data.csv'
 repo = 'https://github.com/Abuton/Loan-Predictor-with-MLflow-DVC'
 version = 'v1'
 
-data_url = d.get_url(
-    path=path,
-    repo=repo,
-    # rev=version
-)
+# data_url = d.get_url(
+#     path=path,
+#     repo=repo,
+#     # rev=version
+# )
+
+data_url = path
 
 class Trainer(object):
     def __init__(self, experiment_name, run_origin="none"):
@@ -38,7 +40,7 @@ class Trainer(object):
         print("run_origin:",run_origin)
 
         # Read the wine-quality csv file 
-        print("data_path:",data_url)
+        print("data path:",data_url)
         data = pd.read_csv(data_url)
 
     
