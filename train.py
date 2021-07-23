@@ -108,7 +108,7 @@ class Trainer(object):
             mlflow.log_metric("r2", r2)
             mlflow.log_metric("recall_score", recal_sc)
             
-            mlflow.set_tag("data_path", self.data_url)
+            # mlflow.set_tag("data_path", self.data_url)
             mlflow.set_tag("exp_id", experiment_id)
             mlflow.set_tag("exp_name", self.experiment_name)
             mlflow.set_tag("run_origin", self.run_origin)
