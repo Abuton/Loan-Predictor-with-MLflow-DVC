@@ -13,6 +13,7 @@ jobs:
         run: |
           # Install requirements
           pip install -r requirements.txt
+          pip install dvc[gdrive]
 
           # Pull dataset with DVC
           dvc pull
@@ -22,7 +23,7 @@ jobs:
 
           # Pull data and reproduce pipeline
           # dvc pull --run-cache
-          dvc repro
+          # dvc repro
 
           # Report metrics
           echo "## Metrics" >> report.md
