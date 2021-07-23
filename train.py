@@ -118,7 +118,7 @@ class Trainer(object):
     
             eps = 5e-3  # the smaller it is the longer is the path
             alphas_enet, coefs_enet, _ = enet_path(self.X, self.y, eps=eps, l1_ratio=l1_ratio, max_iter=max_iter, fit_intercept=False)
-            plot_file = "LogisticRegression-paths.png"
+            plot_file = "images/LogisticRegression-paths.png"
             plot_utils.plot_enet_descent_path(self.X, self.y, l1_ratio, alphas_enet, coefs_enet, plot_file)
             mlflow.log_artifact(plot_file)
     

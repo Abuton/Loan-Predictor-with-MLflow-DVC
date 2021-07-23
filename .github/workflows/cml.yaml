@@ -31,10 +31,10 @@ jobs:
           # Use DVC metrics diff to compare metrics to master
           git fetch --prune --unshallow
 
-          dvc metrics diff --show-md master >> report.md
+          dvc metrics diff --show-md main >> report.md
 
           # Add figure to report
           echo "## Data Visualization" >> report.md
-          cml-publish images/featureImportance.png --md >> report.md
+          cml-publish images/LogisticRegression-paths.png --md >> report.md
 
           cml-send-comment report.md 
