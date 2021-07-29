@@ -125,6 +125,6 @@ class Trainer(object):
         return (experiment_id,run_id)
 
 if __name__ == "__main__":
-    train = Trainer(experiment_name='loan-predictor', run_origin='Local Run')
+    train = Trainer(experiment_name='loan-predictor-v2', run_origin='Local Run')
 
-    train.train(C=0.5, l1_ratio=0.8, max_iter=300)
+    train.train(C=0.6, l1_ratio=0.8, max_iter=400)
