@@ -28,7 +28,7 @@ data_url = d.get_url(
 #     # rev=version
 )
 
-data_url = path
+# data_url = path
 
 class Trainer(object):
     def __init__(self, experiment_name, run_origin="none"):
