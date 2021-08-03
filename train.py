@@ -22,11 +22,11 @@ path = 'data/loan_data.csv'
 repo = 'https://github.com/Abuton/Loan-Predictor-with-MLflow-DVC'
 version = 'v1'
 
-# data_url = d.get_url(
-#     path=path,
-#     repo=repo,
+data_url = d.get_url(
+    path=path,
+    repo=repo,
 #     # rev=version
-# )
+)
 
 data_url = path
 
